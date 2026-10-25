@@ -14,7 +14,7 @@ struct SafeToSpendHero: View {
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text(breakdown.leftToday.formatted())
+            Text(breakdown.leftToday.roundedToRupee.formatted())
                 .font(.system(size: heroSize, weight: .bold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(Theme.color(left: breakdown.leftToday, allowance: breakdown.dailyAllowance))
@@ -22,7 +22,7 @@ struct SafeToSpendHero: View {
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
 
-            Text("\(breakdown.dailyAllowance.formatted()) a day · \(daysText)")
+            Text("\(allowanceText) · \(daysText)")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
@@ -38,6 +38,11 @@ struct SafeToSpendHero: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical)
         .accessibilityElement(children: .contain)
+    }
+
+    private var allowanceText: String {
+        let a = breakdown.dailyAllowance.roundedToRupee
+        return a < .zero ? "\((-a).formatted()) a day over budget" : "\(a.formatted()) a day"
     }
 
     private var daysText: String {

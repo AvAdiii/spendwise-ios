@@ -23,7 +23,7 @@ struct SafeToSpendWidgetView: View {
     var body: some View {
         switch family {
         case .accessoryInline:
-            Text(entry.leftToday.map { "\($0.formatted()) safe today" } ?? "Spendwise")
+            Text(entry.leftToday.map { "\($0.roundedToRupee.formatted()) safe today" } ?? "Spendwise")
         case .accessoryCircular:
             circular
         case .accessoryRectangular:
@@ -42,7 +42,7 @@ struct SafeToSpendWidgetView: View {
         return .green
     }
 
-    private var amount: String { entry.leftToday?.formatted() ?? "—" }
+    private var amount: String { entry.leftToday?.roundedToRupee.formatted() ?? "—" }
 
     private var small: some View {
         VStack(alignment: .leading, spacing: 4) {

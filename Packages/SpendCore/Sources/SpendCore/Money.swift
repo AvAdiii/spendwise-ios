@@ -51,6 +51,11 @@ public struct Money: Hashable, Comparable, Codable, Sendable, AdditiveArithmetic
     }
 
     public func clamped(min lower: Money) -> Money { Swift.max(self, lower) }
+
+    /// Nearest whole rupee (half away from zero), for headline numbers.
+    public var roundedToRupee: Money {
+        Money(paise: Int((Double(paise) / 100).rounded()) * 100)
+    }
 }
 
 extension Sequence where Element == Money {

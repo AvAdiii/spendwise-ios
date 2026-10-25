@@ -7,7 +7,9 @@ import SwiftData
 enum DemoData {
     static func seed(_ context: ModelContext, now: Date = .now) {
         let start = IST.addDays(-45, to: IST.startOfDay(now))
-        context.insert(CheckpointModel(date: start, bank: Money(rupees: 9_000), cash: Money(rupees: 300)))
+        // Balance confirmed right after the last top-up; earlier history only feeds the forecast.
+        context.insert(CheckpointModel(date: IST.addDays(-12, to: now).addingTimeInterval(60), bank: Money(rupees: 9_500),
+                                       cash: Money(rupees: 300)))
         AppSettings.lastTopUp = IST.addDays(-12, to: now)
         AppSettings.nextTopUp = IST.addDays(9, to: IST.startOfDay(now))
         AppSettings.userName = "Alex"
@@ -20,14 +22,14 @@ enum DemoData {
         for friend in [priya, rahul, karthik] { context.insert(friend) }
 
         let merchants: [(String, String, ClosedRange<Int>)] = [
-            ("SWIGGY", "Food", 180...420), ("MADRUS KITCHEN", "Food", 40...140), ("ZEPTO", "Groceries", 90...350),
-            ("RAPIDO", "Transport", 40...120), ("CANTEEN IIIT", "Food", 20...90), ("AMAZON", "Shopping", 200...900),
+            ("SWIGGY", "Food", 150...320), ("MADRUS KITCHEN", "Food", 40...140), ("ZEPTO", "Groceries", 80...260),
+            ("RAPIDO", "Transport", 40...110), ("CANTEEN", "Food", 20...90), ("CHAI POINT", "Food", 20...60),
         ]
         var rng = SeededGenerator(seed: 7)
         for offset in 0..<45 {
             let day = IST.addDays(offset, to: start)
             guard day < now else { break }
-            let count = IST.weekdayIndex(day) >= 6 ? 3 : 2
+            let count = IST.weekdayIndex(day) >= 6 ? 2 : 1
             for n in 0..<count {
                 let m = merchants[Int.random(in: 0..<merchants.count, using: &rng)]
                 let time = IST.calendar.date(byAdding: .hour, value: 10 + n * 5, to: day) ?? day

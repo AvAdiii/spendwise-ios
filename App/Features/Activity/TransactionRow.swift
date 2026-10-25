@@ -50,7 +50,7 @@ struct TransactionRow: View {
         if transaction.myShare < transaction.amount, transaction.kind == .spend {
             parts.append("your share \(transaction.myShare.formatted())")
         }
-        if let friendName, transaction.kind != .spend { parts.append(friendName) }
+        if let friendName, transaction.kind != .spend, friendName != title { parts.append(friendName) }
         parts.append(time)
         return parts.joined(separator: " · ")
     }

@@ -96,6 +96,12 @@ import Testing
         #expect(Money(paise: 124_050).plainString == "1240.50")
     }
 
+    @Test func roundsToRupee() {
+        #expect(Money(paise: 111_344).roundedToRupee == Money(rupees: 1113))
+        #expect(Money(paise: 111_350).roundedToRupee == Money(rupees: 1114))
+        #expect(Money(paise: -105_344).roundedToRupee == Money(rupees: -1053))
+    }
+
     @Test func splitsEvenlyWithRemainderOnFirst() {
         let parts = Money(paise: 1000).split(into: 3)
         #expect(parts == [Money(paise: 334), Money(paise: 333), Money(paise: 333)])
