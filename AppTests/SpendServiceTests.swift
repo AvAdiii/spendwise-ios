@@ -72,7 +72,9 @@ import Testing
         DemoData.seed(context)
         let before = LedgerSnapshot.load(from: context)
         let url = try BackupService.export(context: context)
-        let other = SharedStore.makeContainer(inMemory: true).mainContext
+        // Keep the container alive: a ModelContext does not retain it.
+        let otherContainer = SharedStore.makeContainer(inMemory: true)
+        let other = otherContainer.mainContext
         try BackupService.restore(from: url, context: other)
         let after = LedgerSnapshot.load(from: other)
         #expect(after.transactions.count == before.transactions.count)

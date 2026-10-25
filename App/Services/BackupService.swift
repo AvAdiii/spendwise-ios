@@ -59,14 +59,14 @@ enum BackupService {
         decoder.dateDecodingStrategy = .iso8601
         let b = try decoder.decode(Backup.self, from: Data(contentsOf: url))
 
-        try context.delete(model: TxModel.self)
-        try context.delete(model: FriendModel.self)
-        try context.delete(model: IOUModel.self)
-        try context.delete(model: FixedCostModel.self)
-        try context.delete(model: EventModel.self)
-        try context.delete(model: TagModel.self)
-        try context.delete(model: RuleModel.self)
-        try context.delete(model: CheckpointModel.self)
+        try deleteAll(TxModel.self, in: context)
+        try deleteAll(FriendModel.self, in: context)
+        try deleteAll(IOUModel.self, in: context)
+        try deleteAll(FixedCostModel.self, in: context)
+        try deleteAll(EventModel.self, in: context)
+        try deleteAll(TagModel.self, in: context)
+        try deleteAll(RuleModel.self, in: context)
+        try deleteAll(CheckpointModel.self, in: context)
 
         for t in b.transactions { context.insert(TxModel(record: t)) }
         for f in b.friends {
@@ -106,5 +106,10 @@ enum BackupService {
         AppSettings.userVPA = b.userVPA
         AppSettings.onboarded = true
         try context.save()
+    }
+
+    /// Row-by-row delete; batch delete is not supported by every store type.
+    private static func deleteAll<T: PersistentModel>(_ type: T.Type, in context: ModelContext) throws {
+        for item in try context.fetch(FetchDescriptor<T>()) { context.delete(item) }
     }
 }
