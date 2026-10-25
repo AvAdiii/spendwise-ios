@@ -44,7 +44,8 @@ enum BackupService {
                             userName: AppSettings.userName, userVPA: AppSettings.userVPA)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        encoder.dateEncodingStrategy = .iso8601
+        // Seconds as Double round-trip exactly; ISO 8601 would drop fractional seconds.
+        encoder.dateEncodingStrategy = .secondsSince1970
         let stamp = Date.now.formatted(.iso8601.year().month().day())
         let url = URL.temporaryDirectory.appending(path: "Spendwise-\(stamp).json")
         try encoder.encode(backup).write(to: url)
@@ -56,7 +57,7 @@ enum BackupService {
         let accessing = url.startAccessingSecurityScopedResource()
         defer { if accessing { url.stopAccessingSecurityScopedResource() } }
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .secondsSince1970
         let b = try decoder.decode(Backup.self, from: Data(contentsOf: url))
 
         try deleteAll(TxModel.self, in: context)
