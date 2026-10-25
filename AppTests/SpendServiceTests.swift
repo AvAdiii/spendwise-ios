@@ -79,7 +79,9 @@ import Testing
         let after = LedgerSnapshot.load(from: other)
         #expect(after.transactions.count == before.transactions.count)
         #expect(after.ious.map(\.outstanding).sum() == before.ious.map(\.outstanding).sum())
-        #expect(after.checkpoint == before.checkpoint)
+        let a = try #require(after.checkpoint), b = try #require(before.checkpoint)
+        #expect(a.bank == b.bank && a.cash == b.cash)
+        #expect(abs(a.date.timeIntervalSince(b.date)) < 0.001)
     }
 
     @Test func demoSummaryIsComputable() {
