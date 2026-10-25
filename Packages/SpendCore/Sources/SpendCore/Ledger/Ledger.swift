@@ -3,6 +3,12 @@ import Foundation
 public struct FriendBalance: Hashable, Sendable {
     public var payable: Money
     public var receivable: Money
+
+    public init(payable: Money, receivable: Money) {
+        self.payable = payable
+        self.receivable = receivable
+    }
+
     /// Positive: friend owes the user. Negative: user owes the friend.
     public var net: Money { receivable - payable }
 }
