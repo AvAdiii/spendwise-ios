@@ -12,7 +12,7 @@ struct FriendsView: View {
         NavigationStack {
             List {
                 if let nudge = CollectionNudge.message(now: .now, receivable: Ledger.totalReceivable(ious.map(\.iou)),
-                                                       debtors: balances.values.count { $0.receivable.isPositive },
+                                                       debtors: balances.values.count(where: { $0.receivable.isPositive }),
                                                        payable: Ledger.totalPayable(ious.map(\.iou))) {
                     Section {
                         Label(nudge, systemImage: "calendar.badge.clock")

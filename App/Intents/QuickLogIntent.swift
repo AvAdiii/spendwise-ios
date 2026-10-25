@@ -22,8 +22,7 @@ struct QuickLogIntent: AppIntent {
     @Parameter(title: "Friends to split with", requestValueDialog: "Who were you with?")
     var friends: [FriendEntity]?
 
-    @Parameter(title: "People including you", requestValueDialog: "How many people split it, including you?",
-               inclusiveRange: (1, 50))
+    @Parameter(title: "People including you", requestValueDialog: "How many people split it, including you?")
     var people: Int?
 
     static var parameterSummary: some ParameterSummary {

@@ -4,7 +4,7 @@ import SwiftUI
 /// Payee → category corrections the user made; each one is reused for future SMS.
 struct RulesView: View {
     @Environment(\.modelContext) private var context
-    @Query(filter: #Predicate<RuleModel> { $0.exact }, sort: \RuleModel.keyword) private var rules: [RuleModel]
+    @Query(filter: #Predicate<RuleModel> { $0.exact == true }, sort: \RuleModel.keyword) private var rules: [RuleModel]
 
     var body: some View {
         List {

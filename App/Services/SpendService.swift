@@ -112,7 +112,7 @@ struct SpendService {
         tx.category = category
         if learn, let payee = tx.payee, tx.friendID == nil {
             let key = RulesCategorizer.normalize(payee)
-            for old in (try? context.fetch(FetchDescriptor<RuleModel>(predicate: #Predicate { $0.keyword == key && $0.exact }))) ?? [] {
+            for old in (try? context.fetch(FetchDescriptor<RuleModel>(predicate: #Predicate { $0.keyword == key && $0.exact == true }))) ?? [] {
                 context.delete(old)
             }
             context.insert(RuleModel(keyword: key, category: category, exact: true))

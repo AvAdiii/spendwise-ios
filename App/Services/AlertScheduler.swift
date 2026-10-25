@@ -46,7 +46,7 @@ final class AlertScheduler {
 
         // Start-of-month collection nudge, once per day.
         let dayKey = "nudge-\(Int(IST.startOfDay(now).timeIntervalSince1970))"
-        let debtors = Ledger.balances(snapshot.ious).values.count { $0.receivable.isPositive }
+        let debtors = Ledger.balances(snapshot.ious).values.count(where: { $0.receivable.isPositive })
         if AppSettings.alertValue(dayKey) == nil,
            let msg = CollectionNudge.message(now: now, receivable: b.receivables, debtors: debtors, payable: b.payables) {
             AppSettings.setAlertValue(1, for: dayKey)
