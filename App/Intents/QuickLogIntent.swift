@@ -41,6 +41,10 @@ struct QuickLogIntent: AppIntent {
         let total = Money(paise: Int((amount * 100).rounded()))
         guard total.isPositive else { return .result(dialog: "Nothing logged: the amount was zero.") }
 
+        if mode != .cash, try await FriendQuery().suggestedEntities().isEmpty {
+            throw QuickLogError.missingFriend
+        }
+
         switch mode {
         case .cash:
             service.logCash(amount: total, category: category.rawValue)
@@ -59,13 +63,15 @@ struct QuickLogIntent: AppIntent {
             return .result(dialog: "You owe \(who.name) \(share.formatted()). Safe-to-spend updated.")
 
         case .paidForGroup:
-            var group = friends ?? []
-            if group.isEmpty {
-                let requested: [FriendEntity]? = try await $friends.requestValue()
-                group = requested ?? []
-            }
-            guard !group.isEmpty else { throw QuickLogError.missingFriend }
             let n = try await resolvedPeople()
+            var group = friends ?? []
+            // requestValue() on an array parameter picks one entity, so ask once per other person.
+            var asked = 0
+            while group.isEmpty || (friends == nil && asked < n - 1 && asked < 8) {
+                let pick: FriendEntity = try await $friends.requestValue("Who else was there? (\(asked + 1) of \(max(1, n - 1)))")
+                asked += 1
+                if !group.contains(where: { $0.id == pick.id }) { group.append(pick) }
+            }
             service.logPaidForGroup(total: total, friendIDs: group.map(\.id), people: max(n, group.count + 1),
                                     myShare: nil, category: category.rawValue)
             let names = group.map(\.name).formatted()
