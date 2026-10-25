@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1FB673"/>
+      <stop offset="1" stop-color="#0A6B4A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- gauge track and fill: 270° arc, ~70% filled -->
+  <circle cx="512" cy="512" r="330" fill="none" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="58"
+          stroke-linecap="round" stroke-dasharray="1555 2073" transform="rotate(135 512 512)"/>
+  <circle cx="512" cy="512" r="330" fill="none" stroke="#FFFFFF" stroke-width="58"
+          stroke-linecap="round" stroke-dasharray="1090 2073" transform="rotate(135 512 512)"/>
+  <!-- rupee sign -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="54" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M400 372 H628"/>
+    <path d="M400 452 H628"/>
+    <path d="M400 372 H482 C552 372 588 408 588 452 C588 500 548 534 482 534 H412 L590 690"/>
+  </g>
+</svg>

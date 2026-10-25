@@ -1,0 +1,9 @@
+.DS_Store
+.build/
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+build/
+*.ipa
+.swiftpm/
+Student Expense Tracker Product Plan.md

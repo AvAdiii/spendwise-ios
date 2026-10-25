@@ -1,0 +1,111 @@
+name: Spendwise
+options:
+  bundleIdPrefix: com.avaditya
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # App/widget code uses Swift 5 mode; SpendCore (the logic) builds in Swift 6 strict mode.
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+packages:
+  SpendCore:
+    path: Packages/SpendCore
+
+targets:
+  Spendwise:
+    type: application
+    platform: iOS
+    sources:
+      - App
+      - Shared
+      - Resources
+    dependencies:
+      - package: SpendCore
+      - target: SpendwiseWidget
+    entitlements:
+      path: Config/Spendwise.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.avaditya.spendwise
+    info:
+      path: Config/Spendwise-Info.plist
+      properties:
+        CFBundleDisplayName: Spendwise
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCalendarsFullAccessUsageDescription: Spendwise tags days with events like parties, trips and exams so your spending forecast knows what's coming.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.avaditya.spendwise
+            CFBundleURLSchemes:
+              - spendwise
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.avaditya.spendwise
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  SpendwiseWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Widget
+      - Shared
+    dependencies:
+      - package: SpendCore
+    entitlements:
+      path: Config/SpendwiseWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.avaditya.spendwise
+    info:
+      path: Config/SpendwiseWidget-Info.plist
+      properties:
+        CFBundleDisplayName: Spendwise
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.avaditya.spendwise.widget
+
+  SpendwiseTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - AppTests
+    dependencies:
+      - target: Spendwise
+      - package: SpendCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.avaditya.spendwise.tests
+
+schemes:
+  Spendwise:
+    build:
+      targets:
+        Spendwise: all
+        SpendwiseTests: [test]
+    test:
+      targets:
+        - SpendwiseTests
+      gatherCoverageData: false
+    run:
+      config: Debug
